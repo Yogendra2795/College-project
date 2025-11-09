@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blood Bank Management System</title>
+  <style>
+    :root {
+      --primary: #d62828;
+      --dark: #1a1a1a;
+      --light: #fff;
+      --gray: #f5f5f5;
+      --shadow: rgba(0,0,0,0.1);
+    }
+    * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body {
+      margin: 0; background: var(--gray); color: #333;
+      display: flex; flex-direction: column; height: 100vh;
+    }
+    header {
+      background: var(--primary); color: var(--light); text-align: center;
+      padding: 15px; font-size: 22px; font-weight: bold;
+      letter-spacing: 1px; box-shadow: 0 2px 8px var(--shadow);
+    }
+    nav {
+      display: flex; justify-content: center;
+      background: var(--dark); box-shadow: 0 2px 4px var(--shadow);
+    }
+    nav button {
+      background: none; border: none; color: var(--light);
+      padding: 12px 25px; cursor: pointer; font-size: 16px;
+      transition: 0.3s;
+    }
+    nav button:hover, nav button.active {
+      background: var(--primary);
+    }
+    section {
+      display: none; flex: 1; padding: 20px; overflow-y: auto;
+      animation: fadeIn 0.4s ease;
+    }
+    section.active { display: block; }
+    @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+
+    .container {
+      max-width: 900px; margin: auto; background: white;
+      padding: 25px; border-radius: 12px;
+      box-shadow: 0 4px 10px var(--shadow);
+    }
+    h2 { color: var(--primary); }
+    input, select, textarea {
+      width: 100%; padding: 10px; margin: 8px 0 12px;
+      border: 1px solid #ccc; border-radius: 6px;
+    }
+    button.action {
+      background: var(--primary); color: white; border: none;
+      padding: 10px 20px; border-radius: 6px; cursor: pointer;
+      transition: 0.3s;
+    }
+    button.action:hover { background: #a01414; }
+    table {
+      width: 100%; border-collapse: collapse; margin-top: 10px;
+      border-radius: 6px; overflow: hidden;
+    }
+    th, td {
+      border: 1px solid #ddd; padding: 10px; text-align: center;
+    }
+    th { background: #f1f1f1; }
+    .stock-card {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px; margin-top: 20px;
+    }
+    .stock-item {
+      background: var(--light); border-radius: 10px;
+      box-shadow: 0 3px 8px var(--shadow);
+      padding: 15px; text-align: center;
+      font-size: 18px; font-weight: bold;
+      color: var(--primary);
+      transition: transform 0.3s;
+    }
+    .stock-item:hover { transform: translateY(-4px); }
+    .admin-only { display: none; }
+  </style>
+</head>
+<body>
+  <header>💉 Blood Bank Management System</header>
+
+  <nav>
+    <button class="active" onclick="showSection('home', this)">Home</button>
+    <button onclick="showSection('donor', this)">Donors</button>
+    <button onclick="showSection('request', this)">Requests</button>
+    <button onclick="showSection('stock', this)">Blood Stock</button>
+    <button onclick="showSection('admin', this)">Admin</button>
+  </nav>
+
+  <!-- Home -->
+  <section id="home" class="active">
+    <div class="container">
+      <h2>Welcome to the Blood Bank System</h2>
+      <p>This is a demo version of a web-based Blood Bank Management System built using HTML, CSS, and JavaScript.</p>
+      <p>Features include:</p>
+      <ul>
+        <li>Donor Registration</li>
+        <li>Blood Request Form</li>
+        <li>Blood Stock View</li>
+        <li>Admin Login Panel</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Donor Registration -->
+  <section id="donor">
+    <div class="container">
+      <h2>Donor Registration</h2>
+      <input id="dname" placeholder="Full Name">
+      <input id="dphone" placeholder="Phone Number">
+      <select id="dblood">
+        <option value="">Select Blood Group</option>
+        <option>A+</option><option>A-</option>
+        <option>B+</option><option>B-</option>
+        <option>O+</option><option>O-</option>
+        <option>AB+</option><option>AB-</option>
+      </select>
+      <button class="action" onclick="registerDonor()">Register</button>
+
+      <h3>Registered Donors (Demo)</h3>
+      <table>
+        <thead><tr><th>Name</th><th>Phone</th><th>Blood Group</th></tr></thead>
+        <tbody>
+          <tr><td>Ravi Kumar</td><td>9876543210</td><td>A+</td></tr>
+          <tr><td>Pooja Sharma</td><td>9988776655</td><td>O-</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Blood Request -->
+  <section id="request">
+    <div class="container">
+      <h2>Request Blood</h2>
+      <input id="rname" placeholder="Patient Name">
+      <input id="rphone" placeholder="Contact Number">
+      <select id="rblood">
+        <option value="">Select Blood Group</option>
+        <option>A+</option><option>A-</option>
+        <option>B+</option><option>B-</option>
+        <option>O+</option><option>O-</option>
+        <option>AB+</option><option>AB-</option>
+      </select>
+      <input id="runits" type="number" min="1" placeholder="Units Needed">
+      <textarea id="rreason" placeholder="Hospital / Reason"></textarea>
+      <button class="action" onclick="submitRequest()">Submit Request</button>
+
+      <h3>Sample Requests</h3>
+      <table>
+        <thead><tr><th>Name</th><th>Blood Group</th><th>Units</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Rohan</td><td>B+</td><td>2</td><td>Pending</td></tr>
+          <tr><td>Priya</td><td>O+</td><td>1</td><td>Approved</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Blood Stock -->
+  <section id="stock">
+    <div class="container">
+      <h2>Blood Stock Availability</h2>
+      <p>Here’s a sample blood stock data (for display only):</p>
+      <div class="stock-card">
+        <div class="stock-item">A+<br><span style="color:#111">12 Units</span></div>
+        <div class="stock-item">A-<br><span style="color:#111">6 Units</span></div>
+        <div class="stock-item">B+<br><span style="color:#111">10 Units</span></div>
+        <div class="stock-item">O+<br><span style="color:#111">8 Units</span></div>
+        <div class="stock-item">AB+<br><span style="color:#111">4 Units</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Admin -->
+  <section id="admin">
+    <div class="container">
+      <h2>Admin Login (Demo)</h2>
+      <input id="adminUser" placeholder="Username">
+      <input id="adminPass" type="password" placeholder="Password">
+      <button class="action" onclick="adminLogin()">Login</button>
+
+      <div id="adminPanel" class="admin-only">
+        <h3>Blood Requests</h3>
+        <table>
+          <thead><tr><th>Name</th><th>Blood</th><th>Units</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Rohan</td><td>B+</td><td>2</td><td>Pending</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function showSection(id, btn) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+    }
+
+    function registerDonor() {
+      alert("Demo: Donor registration submitted successfully!");
+    }
+
+    function submitRequest() {
+      alert("Demo: Blood request submitted successfully!");
+    }
+
+    function adminLogin() {
+      const user = document.getElementById("adminUser").value;
+      const pass = document.getElementById("adminPass").value;
+      if (user === "admin" && pass === "admin123") {
+        alert("Admin login successful!");
+        document.getElementById("adminPanel").style.display = "block";
+      } else {
+        alert("Invalid credentials! (Try admin / admin123)");
+      }
+    }
+  </script>
+</body>
+</html>
